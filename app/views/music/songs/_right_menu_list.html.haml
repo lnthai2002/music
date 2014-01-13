@@ -1,0 +1,5 @@
+%li
+  %label Actions
+%li=link_to 'List', songs_path
+%li=link_to 'Edit', song_path(@song) if (@song && !@song.new_record?)
+%li=link_to 'Logout', logout_path, data: {confirm: "Logout now?"}, method: :delete

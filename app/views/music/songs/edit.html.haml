@@ -1,0 +1,8 @@
+=form_for @song do |f|
+  %table
+    - tags_on_file(@song).each do |tag, value|
+      %tr
+        %th=tag
+        %td=f.text_field tag, value: value
+    %tr>
+      %td{'colspan'=>2}=f.submit 'Update'
