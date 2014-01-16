@@ -3,12 +3,30 @@ require_dependency "music/application_controller"
 
 module Music
   class SongsController < ApplicationController
-    set_tab :music
+    #GET /songs/scan
+    def scan
+      @scan_task = ScanTask.new(params['scan_task'])
+      if @scan_task.valid?
+        tag_reader = DRbObject.new(nil, "druby://#{@scan_task.host}:54322") #RFM::Handler::TagReader
+        crawler = DRbObject.new(nil, "druby://#{@scan_task.host}:54321") #RFM::Lib::DiskCrawler
+        begin
+          @results = crawler.scan_and_process_files(@scan_task.folder, tag_reader, @scan_task.recursive=='1'){|file|
+            tag_reader.read_mp3(file)
+          }
+        rescue ArgumentError => e
+          flash[:alert] = e.message
+        end
+      end
+
+      @songs = Song.all
+      render 'index'
+    end
+
     # GET /songs
     # GET /songs.json
     def index
       @songs = Song.all
-
+      @scan_task = ScanTask.new
       respond_to do |format|
         format.html # index.html.erb
         format.json { render json: @songs }

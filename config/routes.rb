@@ -1,5 +1,9 @@
 Music::Engine.routes.draw do
-  resources :songs
+  resources :songs do
+    collection do
+      get :scan
+    end
+  end
 #  match 'songs/download/:id'=>'songs#download', :id => /[^\/]+/
 
   delete 'logout', to: 'sessions#logout'

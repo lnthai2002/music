@@ -1,3 +1,15 @@
+=form_for(@scan_task, {:url=>scan_songs_path, :html=>{method: :get}}) do |f|
+  =f.error_messages
+  =f.label 'host'
+  =f.text_field 'host', :placeholder=>"DRB client host"
+  =f.label 'folder'
+  =f.text_field 'folder', :placeholder=>"Full path of folder to be scanned"
+  =f.label 'recursive', 'Scan subfolders'
+  =f.check_box 'recursive'
+  =f.submit 'Scan'
+-if @results
+  %p=@results.inspect.to_s
+%br
 %table
   %tr
     %th Title
