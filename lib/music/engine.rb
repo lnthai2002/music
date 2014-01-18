@@ -11,5 +11,7 @@ module Music
         end
       end
     end
+
+    require 'activerecord-tableless'
   end
 end
