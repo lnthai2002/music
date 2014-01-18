@@ -17,13 +17,14 @@ Gem::Specification.new do |s|
   s.test_files = Dir["test/**/*"]
 
   s.add_dependency "rails", "~> 4.0.1"
-  s.add_dependency "mysql2"
-  s.add_dependency 'rubycas-client'       #integrate with single-sign-on service 
-  s.add_dependency 'haml-rails'           #shorter syntax to code layout
-  #s.add_dependency 'ruby-mp3info'         #read and write mp3 tag
+  s.add_dependency 'rubycas-client'       #integrate with single-sign-on service
   s.add_dependency 'taglib-ruby'
-  s.add_dependency 'dynamic_form'         #easy to render form error
+  s.add_dependency 'activerecord-tableless'
   s.add_dependency 'foundation-rails'     #foundation UI framework
+
+  s.add_dependency "mysql2"
+  s.add_dependency 'haml-rails'           #shorter syntax to code layout
+  s.add_dependency 'dynamic_form'         #easy to render form error
   s.add_dependency 'jquery-rails'
   s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'remotipart'

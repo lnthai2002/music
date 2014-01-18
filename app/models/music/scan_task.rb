@@ -1,30 +1,21 @@
+#require 'activerecord-tableless'
 module Music
-  class ScanTask
-    include ActiveModel::Model
+  class ScanTask < ActiveRecord::Base
+    has_no_table
 
-    #TODO: recursive should be boolean
-    attr_accessor 'host', 'folder', 'recursive'
+    column 'host', :string
+    column 'security_key', :string
+    column 'folder', :string
+    column 'recursive', :boolean
 
     validates 'host', 'folder', :presence=>true
-    def initialize(attributes = {})
-      attributes.each do |name, value|
-        if name == 'recursive'#treat 'recursive' attribute as boolean
-          value = value == '1'
-        end
-        send("#{name}=", value)
-      end
-    end
-
-    def persisted?
-      false
-    end
     
     def execute
       if self.valid?
         tag_reader = DRbObject.new(nil, "druby://#{host}:54322") #RFM::Handler::TagReader
         crawler = DRbObject.new(nil, "druby://#{host}:54321") #RFM::Lib::DiskCrawler
         begin
-          return wrap(crawler.scan_and_process_files(folder, tag_reader, recursive){|file|
+          return wrap(crawler.scan_and_process_files(folder, tag_reader, recursive, security_key){|file|
             tag_reader.read_mp3(file)
           })
         rescue DRb::DRbConnError => e

@@ -3,29 +3,26 @@ require_dependency "music/application_controller"
 
 module Music
   class SongsController < ApplicationController
+    #POST /songs/write_tags
+    def write_tags
+      @scan_task = ScanTask.new
+      @write_task = WriteTask.new(write_task_params)
+      @write_task.execute
+      render 'index'
+    end
+
     #GET /songs/scan
     def scan
-      @scan_task = ScanTask.new(params['scan_task'])
-      if @scan_task.valid?
-        tag_reader = DRbObject.new(nil, "druby://#{@scan_task.host}:54322") #RFM::Handler::TagReader
-        crawler = DRbObject.new(nil, "druby://#{@scan_task.host}:54321") #RFM::Lib::DiskCrawler
-        begin
-          @results = crawler.scan_and_process_files(@scan_task.folder, tag_reader, @scan_task.recursive=='1'){|file|
-            tag_reader.read_mp3(file)
-          }
-        rescue ArgumentError => e
-          flash[:alert] = e.message
-        end
-      end
-
-      @songs = Song.all
+      @scan_task = ScanTask.new(scan_task_params)
+      @write_task = WriteTask.new
+      @write_task.articles = @scan_task.execute
       render 'index'
     end
 
     # GET /songs
     # GET /songs.json
     def index
-      @songs = Song.all
+      @songs = []
       @scan_task = ScanTask.new
       respond_to do |format|
         format.html # index.html.erb
@@ -145,5 +142,19 @@ module Music
       send_data(file, :type => "audio/mpeg", :filename => "#{@song.id}.mp3", :disposition => "inline")
     end
 =end
+    private
+
+    def scan_task_params
+      params.require('scan_task').permit('host', 'security_key', 'folder', 'recursive')
+    end
+
+    def write_task_params
+      params.require('write_task')
+            .permit('host',
+                    'security_key',
+                    article_attributes: ['file', 'timestamp', 'title',
+                                         'artist','album', 'year','track',
+                                         'genre', 'comment', 'length', 'apic'])
+    end
   end
 end

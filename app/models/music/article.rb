@@ -1,18 +1,20 @@
+#require 'activerecord-tableless'
 module Music
-  class Article
-    include ActiveModel::Model
+  class Article < ActiveRecord::Base
+    has_no_table
+    column 'file', :string
+    column 'timestamp', :string
+    column 'title', :string
+    column 'artist', :string
+    column 'album', :string
+    column 'year', :string
+    column 'track', :string
+    column 'genre', :string
+    column 'comment', :string
+    column 'length', :string
+    column 'apic', :string
 
-    attr_accessor 'file', 'timestamp', 'title', 'artist', 'album', 'year', 'track', 'genre', 'comment', 'length', 'apic'
-
+    belongs_to :write_task
     validates 'file', 'timestamp', :presence=>true
-    def initialize(attributes = {})
-      attributes.each do |name, value|
-        send("#{name}=", value)
-      end
-    end
-
-    def persisted?
-      false
-    end
   end
 end

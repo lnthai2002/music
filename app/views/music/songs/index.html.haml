@@ -2,30 +2,36 @@
   =f.error_messages
   =f.label 'host'
   =f.text_field 'host', :placeholder=>"DRB client host"
+  =f.label 'security_key'
+  =f.password_field 'security_key', :placeholder=>"DRB key for authentication"
   =f.label 'folder'
   =f.text_field 'folder', :placeholder=>"Full path of folder to be scanned"
   =f.label 'recursive', 'Scan subfolders'
   =f.check_box 'recursive'
   =f.submit 'Scan'
--if @results
-  %p=@results.inspect.to_s
 %br
-%table
-  %tr
-    %th Title
-    %th Artist
-    %th Album
-    %th Genre
-    %th &nbsp;
-
-  -@songs.each do |song|
-    %tr
-      %td=song.title
-      %td=song.artist
-      %td=song.album
-      %td=song.genre
-      %td
-        =link_to 'song.name', song_path(song, :format=>:mp3), {:class=>'media'}
-        | 
-        =link_to 'Edit', edit_song_path(song)
-
+-if @write_task
+  =form_for @write_task, {:url=>write_tags_songs_path} do |f|
+    =f.label 'host'
+    =f.text_field 'host', :placeholder=>"DRB client host"
+    =f.label 'security_key'
+    =f.password_field 'security_key', :placeholder=>"DRB key for authentication"
+    %table
+      %tr
+        %th File
+        %th Title
+        %th Artist
+        %th Album
+        %th Genre
+    
+      -@write_task.articles.each do |song|
+        =f.fields_for :articles, song do |s|
+          %tr
+            %th=s.text_field 'file'
+            %td=s.text_field 'title'
+            %td=s.text_field 'artist'
+            %td=s.text_field 'album'
+            %td=s.text_field 'genre'
+      %tr
+        %td
+          =f.submit 'Write'
