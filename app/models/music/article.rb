@@ -13,6 +13,7 @@ module Music
     column 'comment', :string
     column 'length', :string
     column 'apic', :string
+    column 'write_task_id', :integer
 
     belongs_to :write_task
     validates 'file', 'timestamp', :presence=>true

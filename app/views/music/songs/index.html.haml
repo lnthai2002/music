@@ -20,18 +20,25 @@
       %tr
         %th File
         %th Title
+        %th Year
         %th Artist
         %th Album
         %th Genre
+        %th Comment
     
       -@write_task.articles.each do |song|
         =f.fields_for :articles, song do |s|
           %tr
-            %th=s.text_field 'file'
+            %th
+              =song.file
+              =s.hidden_field 'file'
+              =s.hidden_field 'timestamp'
             %td=s.text_field 'title'
+            %td=s.text_field 'year'
             %td=s.text_field 'artist'
             %td=s.text_field 'album'
             %td=s.text_field 'genre'
+            %td=s.text_area 'comment', :rows=>2
       %tr
         %td
           =f.submit 'Write'

@@ -7,7 +7,7 @@ module Music
     def write_tags
       @scan_task = ScanTask.new
       @write_task = WriteTask.new(write_task_params)
-      @write_task.execute
+      @results = @write_task.execute
       render 'index'
     end
 
@@ -152,7 +152,7 @@ module Music
       params.require('write_task')
             .permit('host',
                     'security_key',
-                    article_attributes: ['file', 'timestamp', 'title',
+                    articles_attributes: ['file', 'timestamp', 'title',
                                          'artist','album', 'year','track',
                                          'genre', 'comment', 'length', 'apic'])
     end

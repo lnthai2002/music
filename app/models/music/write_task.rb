@@ -9,11 +9,19 @@ module Music
 
     accepts_nested_attributes_for :articles
 
+    def convert_to_hash(article_list)
+      list = []
+      article_list.each do |a|
+        list << a.attributes.to_hash
+      end
+      return list
+    end
+
     def execute
       if self.valid?
         tag_writer = DRbObject.new(nil, "druby://#{host}:54323") #RFM::Handler::TagWriter
         begin
-          return
+          return tag_writer.write_mp3(convert_to_hash(articles.to_a))
         rescue DRb::DRbConnError => e
           errors.add('host', 'is not reachable')
           return []
