@@ -2,6 +2,7 @@ Music::Engine.routes.draw do
   resources :songs do
     collection do
       get :scan
+      get :load_tags
       post :write_tags
     end
   end

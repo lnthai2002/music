@@ -3,22 +3,21 @@ require_dependency "music/application_controller"
 
 module Music
   class SongsController < ApplicationController
-    #POST /songs/write_tags
-    def write_tags
+    def scan
       @scan_task = ScanTask.new
+    end
+    
+    def load_tags
+      scan_task = ScanTask.new(scan_task_params)
+      @write_task = WriteTask.new
+      @write_task.articles = scan_task.execute
+      render 'write'
+    end
+
+    def write_tags
       @write_task = WriteTask.new(write_task_params)
       @results = @write_task.execute
-      render 'index'
     end
-
-    #GET /songs/scan
-    def scan
-      @scan_task = ScanTask.new(scan_task_params)
-      @write_task = WriteTask.new
-      @write_task.articles = @scan_task.execute
-      render 'index'
-    end
-
     # GET /songs
     # GET /songs.json
     def index

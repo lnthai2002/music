@@ -1,0 +1,6 @@
+%table
+  -@results.each do |file|
+    %tr
+      %td=file['file']
+      %td=file['saved'] == true ? 'saved' : 'fail to save'
+  
