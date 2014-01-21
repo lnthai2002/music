@@ -1,4 +1,5 @@
 Music::Engine.routes.draw do
+  resources :drb_servers
   resources :songs do
     collection do
       get :scan

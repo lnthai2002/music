@@ -1,0 +1,4 @@
+%li
+  %label Actions
+%li=link_to 'Edit', drb_server_path(@drb_server) if (@drb_server && !@drb_server.new_record?)
+%li=link_to 'Logout', logout_path, data: {confirm: "Logout now?"}, method: :delete

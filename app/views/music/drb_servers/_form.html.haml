@@ -1,0 +1,7 @@
+=form_for @drb_server do |f|
+  =f.error_messages
+  =f.label 'host'
+  =f.text_field 'host', :placeholder=>"DRB server host"
+  =f.label 'security_key'
+  =f.password_field 'security_key', :placeholder=>"DRB key for authentication"
+  =f.submit 'Record'
