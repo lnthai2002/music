@@ -21,6 +21,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'taglib-ruby'
   s.add_dependency 'activerecord-tableless'
   s.add_dependency 'foundation-rails'     #foundation UI framework
+  s.add_dependency 'cancan'
 
   s.add_dependency "mysql2"
   s.add_dependency 'haml-rails'           #shorter syntax to code layout

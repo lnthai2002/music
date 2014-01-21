@@ -1,7 +1,5 @@
-require_dependency "music/application_controller"
-
 module Music
-  class DrbServersController < ApplicationController
+  class DrbServersController < AuthorizableController
     def edit
       user = User.where(email: session[:cas_user]).first
       if user.blank?
@@ -15,7 +13,7 @@ module Music
     def update
       @drb_server = DrbServer.accessible_by(current_ability).first
       if @drb_server.update_attributes(drb_server_params)
-        redirect_to 'songs/scan', notice: 'DRB server recorded'
+        redirect_to scan_songs_path, notice: 'DRB server recorded'
       else
         render 'edit'
       end
@@ -30,7 +28,7 @@ module Music
       server = DrbServer.new(drb_server_params)
       server.user = user
       if server.save
-        redirect_to 'songs/scan', notice: 'DRB server recorded'
+        redirect_to scan_songs_path, notice: 'DRB server recorded'
       else
         render 'new'
       end
