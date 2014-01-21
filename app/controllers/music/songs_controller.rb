@@ -1,13 +1,12 @@
-require_dependency "music/application_controller"
 #require 'lib/music/tag_info.rb'
 
 module Music
-  class SongsController < ApplicationController
+  class SongsController < AuthorizableController
+    before_filter :check_drb_server, only: [:streamfile, :scan, :load_tags, :write_tag]
     #GET /song/streamfile
     def streamfile
       streamer = DRbObject.new(nil, "druby://#{params['host']}:54324") #RFM::Handler::BinaryFile
-      #TODO: add security
-      file = streamer.get_file(params['filename'])
+      file = streamer.get_file(params['filename'], @user.drb_server.security_key)
       name = File.basename(params['filename'])
       send_data(file, type: 'audio/mpeg', filename: "#{name}", disposition: 'inline')
     end
@@ -20,15 +19,28 @@ module Music
     #GET /songs/load_tags
     def load_tags
       scan_task = ScanTask.new(scan_task_params)
+      scan_task.drb_server = @user.drb_server
+
       @write_task = WriteTask.new
-      @write_task.articles = scan_task.execute
-      render 'write'
+      begin
+        @write_task.articles = scan_task.execute
+        render 'write'
+      rescue
+        @scan_task = scan_task
+        render 'scan'
+      end
+      
     end
 
     #POST /songs/write_tags
     def write_tags
       @write_task = WriteTask.new(write_task_params)
-      @results = @write_task.execute
+      @write_task .drb_server = @user.drb_server
+      begin
+        @results = @write_task.execute
+      rescue
+        render 'load_tags'
+      end
     end
 
     # GET /songs
@@ -154,6 +166,14 @@ module Music
       send_data(file, :type => "audio/mpeg", :filename => "#{@song.id}.mp3", :disposition => "inline")
     end
 =end
+    protected
+
+    def check_drb_server
+      if @user.drb_server.blank?
+        redirect_to new_drb_server_path
+      end
+    end
+
     private
 
     def scan_task_params

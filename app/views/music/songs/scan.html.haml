@@ -1,9 +1,5 @@
 =form_for(@scan_task, {:url=>load_tags_songs_path, :html=>{method: :get}}) do |f|
   =f.error_messages
-  =f.label 'host'
-  =f.text_field 'host', :placeholder=>"DRB client host"
-  =f.label 'security_key'
-  =f.password_field 'security_key', :placeholder=>"DRB key for authentication"
   =f.label 'folder'
   =f.text_field 'folder', :placeholder=>"Full path of folder to be scanned"
   =f.label 'recursive', 'Scan subfolders'

@@ -1,10 +1,6 @@
 %br
 -if @write_task
   =form_for @write_task, {:url=>write_tags_songs_path} do |f|
-    =f.label 'host'
-    =f.text_field 'host', :placeholder=>"DRB client host"
-    =f.label 'security_key'
-    =f.password_field 'security_key', :placeholder=>"DRB key for authentication"
     %table
       %tr
         %td{colspan: 7}

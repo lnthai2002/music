@@ -3,33 +3,33 @@ module Music
   class ScanTask < ActiveRecord::Base
     has_no_table
 
-    column 'host', :string
-    column 'security_key', :string
     column 'folder', :string
     column 'recursive', :boolean
+    column 'drb_server_id', :integer
 
-    validates 'host', 'folder', :presence=>true
+    belongs_to :drb_server
+    validates 'folder', 'drb_server_id', :presence=>true
     
     def execute
       if self.valid?
-        tag_reader = DRbObject.new(nil, "druby://#{host}:54322") #RFM::Handler::TagReader
-        crawler = DRbObject.new(nil, "druby://#{host}:54321") #RFM::Lib::DiskCrawler
+        tag_reader = DRbObject.new(nil, "druby://#{drb_server.host}:54322") #RFM::Handler::TagReader
+        crawler = DRbObject.new(nil, "druby://#{drb_server.host}:54321") #RFM::Lib::DiskCrawler
         begin
-          return wrap(crawler.scan_and_process_files(folder, tag_reader, recursive, security_key){|file|
-            tag_reader.read_mp3(file)
+          return wrap(crawler.scan_and_process_files(folder,
+                                                     tag_reader,
+                                                     recursive,
+                                                     drb_server.security_key){|file|
+            tag_reader.read_mp3(file, drb_server.security_key)
           })
         rescue DRb::DRbConnError => e
-          errors.add('host', 'is not reachable')
-          return []
+          errors.add(:base, 'host is not reachable')
+          raise ArgumentError, 'host is not reachable'
         rescue ArgumentError => e
-          errors.add('folder', e.message)
-          return []
-        else
-          errors.add_to_base(e.message)
-          return []
+          errors.add(:base, e.message)
+          raise ArgumentError, e.message
         end
       else
-        return []
+        raise ArgumentError, 'invalid ScanTask'
       end
     end
 
