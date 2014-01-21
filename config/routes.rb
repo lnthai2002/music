@@ -9,6 +9,7 @@ Music::Engine.routes.draw do
   end
 #  match 'songs/download/:id'=>'songs#download', :id => /[^\/]+/
 
+  get 'song/streamfile', to: 'songs#streamfile', as: :streamfile 
   delete 'logout', to: 'sessions#logout'
 
   root :to => 'songs#index'

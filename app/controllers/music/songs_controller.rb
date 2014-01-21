@@ -3,10 +3,21 @@ require_dependency "music/application_controller"
 
 module Music
   class SongsController < ApplicationController
+    #GET /song/streamfile
+    def streamfile
+      streamer = DRbObject.new(nil, "druby://#{params['host']}:54324") #RFM::Handler::BinaryFile
+      #TODO: add security
+      file = streamer.get_file(params['filename'])
+      name = File.basename(params['filename'])
+      send_data(file, type: 'audio/mpeg', filename: "#{name}", disposition: 'inline')
+    end
+
+    #GET /songs/scan
     def scan
       @scan_task = ScanTask.new
     end
-    
+
+    #GET /songs/load_tags
     def load_tags
       scan_task = ScanTask.new(scan_task_params)
       @write_task = WriteTask.new
@@ -14,10 +25,12 @@ module Music
       render 'write'
     end
 
+    #POST /songs/write_tags
     def write_tags
       @write_task = WriteTask.new(write_task_params)
       @results = @write_task.execute
     end
+
     # GET /songs
     # GET /songs.json
     def index
@@ -152,8 +165,8 @@ module Music
             .permit('host',
                     'security_key',
                     articles_attributes: ['file', 'timestamp', 'title',
-                                         'artist','album', 'year','track',
-                                         'genre', 'comment', 'length', 'apic'])
+                                          'artist','album', 'year','track',
+                                          'genre', 'comment', 'length', 'apic'])
     end
   end
 end

@@ -17,6 +17,7 @@
 //= require foundation
 //= require_tree .
 
+//initialize Foundation framework
 $(function() {
 	$(document).foundation();
 });

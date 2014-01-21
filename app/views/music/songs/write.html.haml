@@ -7,6 +7,9 @@
     =f.password_field 'security_key', :placeholder=>"DRB key for authentication"
     %table
       %tr
+        %td{colspan: 7}
+          %section#audio
+      %tr
         %th File
         %th Title
         %th Year
@@ -19,7 +22,7 @@
         =f.fields_for :articles, song do |s|
           %tr
             %th
-              =song.file
+              =link_to song.file, streamfile_path(filename: song['file']), :class => "html5-audio"
               =s.hidden_field 'file'
               =s.hidden_field 'timestamp'
             %td=s.text_field 'title'
