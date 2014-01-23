@@ -12,6 +12,8 @@ module Music
       end
     end
 
+    require 'rubygems'
     require 'activerecord-tableless'
+    require 'cancan'
   end
 end

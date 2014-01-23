@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Music::VERSION
   s.authors     = ["Nhut Thai Le"]
   s.email       = ["lnthai2002@yahoo.com"]
-  s.homepage    = "darkportal.no-ip.info/pas/music"
+  s.homepage    = "http://darkportal.no-ip.info/pas/music"
   s.summary     = "Manage digital song tags"
   s.description = "Web interface to tag editor"
 
@@ -23,7 +23,7 @@ Gem::Specification.new do |s|
   s.add_dependency 'foundation-rails'     #foundation UI framework
   s.add_dependency 'cancan'
 
-  s.add_dependency "mysql2"
+  s.add_dependency 'mysql2'
   s.add_dependency 'haml-rails'           #shorter syntax to code layout
   s.add_dependency 'dynamic_form'         #easy to render form error
   s.add_dependency 'jquery-rails'
