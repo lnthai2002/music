@@ -12,15 +12,9 @@ module Music
     
     def execute
       if self.valid?
-        tag_reader = DRbObject.new(nil, "druby://#{drb_server.host}:54322") #RFM::Handler::TagReader
-        crawler = DRbObject.new(nil, "druby://#{drb_server.host}:54321") #RFM::Lib::DiskCrawler
+        remoteFS = DRbObject.new(nil, "druby://#{drb_server.host}:54321") #RFM::Public::FileSystem
         begin
-          return wrap(crawler.scan_and_process_files(folder,
-                                                     tag_reader,
-                                                     recursive,
-                                                     drb_server.security_key){|file|
-            tag_reader.read_mp3(file, drb_server.security_key)
-          })
+          return wrap(remoteFS.find_mp3(folder, recursive, drb_server.security_key))
         rescue DRb::DRbConnError => e
           errors.add(:base, 'host is not reachable')
           raise ArgumentError, 'host is not reachable'
@@ -35,10 +29,12 @@ module Music
 
     private
 
-    def wrap(list)
+    def wrap(hash)
       songs = []
-      list.each do |hash|
-        songs << Article.new(hash)
+      hash.each do |file, tags|
+        song = Article.new(tags)
+        song.file = file
+        songs << song
       end
       return songs
     end

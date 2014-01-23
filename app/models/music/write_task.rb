@@ -14,9 +14,9 @@ module Music
 
     def execute
       if self.valid?
-        tag_writer = DRbObject.new(nil, "druby://#{drb_server.host}:54323") #RFM::Handler::TagWriter
+        remoteFS = DRbObject.new(nil, "druby://#{drb_server.host}:54321") #RFM::Public::FileSystem
         begin
-          return tag_writer.write_mp3(convert_to_hash(articles.to_a), drb_server.security_key)
+          return remoteFS.write_mp3_tags(convert_to_hash(articles.to_a), drb_server.security_key)
         rescue DRb::DRbConnError => e
           errors.add('host', 'is not reachable')
           return []
@@ -35,9 +35,9 @@ module Music
     private
 
     def convert_to_hash(article_list)
-      list = []
+      list = Hash.new
       article_list.each do |a|
-        list << a.attributes.to_hash
+        list[a.file] = a.attributes.to_hash #TODO: exclude 'file' from this hash
       end
       return list
     end
