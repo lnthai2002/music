@@ -5,8 +5,8 @@ module Music
     before_filter :check_drb_server, only: [:streamfile, :scan, :load_tags, :write_tag]
     #GET /song/streamfile
     def streamfile
-      streamer = DRbObject.new(nil, "druby://#{params['host']}:54324") #RFM::Handler::BinaryFile
-      file = streamer.get_file(params['filename'], @user.drb_server.security_key)
+      remoteFs = DRbObject.new(nil, "druby://#{params['host']}:54321") #RFM::Handler::BinaryFile
+      file = remoteFs.get_audio_file(params['filename'], @user.drb_server.security_key)
       name = File.basename(params['filename'])
       send_data(file, type: 'audio/mpeg', filename: "#{name}", disposition: 'inline')
     end

@@ -1,6 +1,9 @@
 %table
-  -@results.each do |file|
+  %tr
+    %th File
+    %th Status
+  -@results.each do |file, saved|
     %tr
-      %td=file['file']
-      %td=file['saved'] == true ? 'saved' : 'fail to save'
+      %td=file
+      %td=saved == true ? 'saved' : 'fail to save'
   
