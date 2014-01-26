@@ -3,9 +3,10 @@
   =form_for @write_task, {:url=>write_tags_songs_path} do |f|
     %table
       %tr
-        %td{colspan: 7}
+        %td{colspan: 8}
           %section#audio
       %tr
+        %th Save
         %th File
         %th Title
         %th Year
@@ -17,6 +18,7 @@
       -@write_task.articles.each do |song|
         =f.fields_for :articles, song do |s|
           %tr
+            %th=s.check_box 'to_save'
             %th
               =link_to song.file, streamfile_path(filename: song['file']), :class => "html5-audio"
               =s.hidden_field 'file'
