@@ -5,7 +5,7 @@ module Music
     before_filter :check_drb_server, only: [:streamfile, :scan, :load_tags, :write_tag]
     #GET /song/streamfile
     def streamfile
-      remoteFs = DRbObject.new(nil, "druby://#{params['host']}:54321") #RFM::Handler::BinaryFile
+      remoteFs = DRbObject.new(nil, "druby://#{@user.drb_server.host}:54321") #RFM::Handler::BinaryFile
       file = remoteFs.get_audio_file(params['filename'], @user.drb_server.security_key)
       name = File.basename(params['filename'])
       send_data(file, type: 'audio/mpeg', filename: "#{name}", disposition: 'inline')
@@ -34,6 +34,7 @@ module Music
 
     #POST /songs/write_tags
     def write_tags
+      byebug
       @write_task = WriteTask.new(write_task_params)
       @write_task .drb_server = @user.drb_server
       begin
@@ -184,7 +185,7 @@ module Music
       params.require('write_task')
             .permit('host',
                     'security_key',
-                    articles_attributes: ['file', 'timestamp', 'title',
+                    articles_attributes: ['to_save', 'file', 'timestamp', 'title',
                                           'artist','album', 'year','track',
                                           'genre', 'comment', 'length', 'apic'])
     end

@@ -2,6 +2,7 @@
 module Music
   class Article < ActiveRecord::Base
     has_no_table
+    column 'to_save', :boolean
     column 'file', :string
     column 'timestamp', :string
     column 'title', :string
