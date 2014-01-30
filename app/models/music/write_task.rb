@@ -16,7 +16,7 @@ module Music
       if self.valid?
         remoteFS = DRbObject.new(nil, "druby://#{drb_server.host}:54321") #RFM::Public::FileSystem
         begin
-          return remoteFS.write_mp3_tags(select_for_saving(articles.to_a), drb_server.security_key)
+          return remoteFS.write_mp3_tags(drb_server.security_key, select_for_saving(articles.to_a))
         rescue DRb::DRbConnError => e
           errors.add('host', 'is not reachable')
           return []
