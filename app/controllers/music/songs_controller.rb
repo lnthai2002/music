@@ -34,13 +34,13 @@ module Music
 
     #POST /songs/write_tags
     def write_tags
-      byebug
       @write_task = WriteTask.new(write_task_params)
-      @write_task .drb_server = @user.drb_server
+      @write_task.drb_server = @user.drb_server
       begin
         @results = @write_task.execute
       rescue
-        render 'load_tags'
+        flash[:alert] = $!.message
+        render 'write'
       end
     end
 
