@@ -14,7 +14,7 @@ module Music
       if self.valid?
         remoteFS = DRbObject.new(nil, "druby://#{drb_server.host}:54321") #RFM::Public::FileSystem
         begin
-          return wrap(remoteFS.find_mp3(folder, recursive, drb_server.security_key))
+          return wrap(remoteFS.find_mp3(drb_server.security_key, folder, recursive))
         rescue DRb::DRbConnError => e
           errors.add(:base, 'host is not reachable')
           raise ArgumentError, 'host is not reachable'

@@ -6,7 +6,7 @@ module Music
     #GET /song/streamfile
     def streamfile
       remoteFs = DRbObject.new(nil, "druby://#{@user.drb_server.host}:54321") #RFM::Handler::BinaryFile
-      file = remoteFs.get_audio_file(params['filename'], @user.drb_server.security_key)
+      file = remoteFs.get_mp3_file(@user.drb_server.security_key, params['filename'])
       name = File.basename(params['filename'])
       send_data(file, type: 'audio/mpeg', filename: "#{name}", disposition: 'inline')
     end
@@ -34,13 +34,13 @@ module Music
 
     #POST /songs/write_tags
     def write_tags
-      byebug
       @write_task = WriteTask.new(write_task_params)
-      @write_task .drb_server = @user.drb_server
+      @write_task.drb_server = @user.drb_server
       begin
         @results = @write_task.execute
       rescue
-        render 'load_tags'
+        flash[:alert] = $!.message
+        render 'write'
       end
     end
 
