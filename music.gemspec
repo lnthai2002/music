@@ -27,7 +27,6 @@ Gem::Specification.new do |s|
   s.add_dependency 'haml-rails'           #shorter syntax to code layout
   s.add_dependency 'dynamic_form'         #easy to render form error
   s.add_dependency 'jquery-rails'
-  s.add_dependency 'jquery-ui-rails'
   s.add_dependency 'remotipart'
   
   s.add_development_dependency 'rails_layout' #generate template for foundation/bootstrap
