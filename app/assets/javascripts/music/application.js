@@ -14,7 +14,9 @@
 //= require jquery_ujs
 //= require jquery.remotipart
 // Note: Foundation 5 won't work with turbolinks
-//= require foundation
+//= require foundation/foundation
+//= require foundation/foundation.offcanvas
+//= require foundation/foundation.alert
 //= require_tree .
 
 //initialize Foundation framework
