@@ -20,10 +20,10 @@ Gem::Specification.new do |s|
   s.add_dependency 'rubycas-client'       #integrate with single-sign-on service
   s.add_dependency 'taglib-ruby'
   s.add_dependency 'activerecord-tableless'
-  s.add_dependency 'foundation-rails'     #foundation UI framework
+  s.add_dependency 'foundation-rails', '~> 5.0'     #foundation UI framework
   s.add_dependency 'cancan'
 
-  s.add_dependency 'mysql2'
+  s.add_dependency 'mysql2', '~> 0.3.18'
   s.add_dependency 'haml-rails'           #shorter syntax to code layout
   s.add_dependency 'dynamic_form'         #easy to render form error
   s.add_dependency 'jquery-rails'
